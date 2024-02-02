@@ -1,0 +1,293 @@
+<!-- Start Attachment Page -->
+<section class="attachment-page">
+
+  <!-- Start Page Content -->
+  <article class="container-fluid mb-5">
+      <div class="sect-content">
+          <h3>
+            {{'SearchCriteria' }}
+          </h3>
+          <div class="details">
+            <form>
+              <div class="row">
+                <div class="col-lg-3 col-md-4 col-sm-4 col-12">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">{{'Id' }}</label>
+                    <input type="text" class="form-control" name="EmployeeId" [(ngModel)]="Search.Id">
+                  </div>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-4 col-12">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">{{'Employee Name' }}</label>
+                    <input type="text" class="form-control" name="Name" [(ngModel)]="Search.Name">
+                  </div>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-4 col-12">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">{{'Employee Salary' }}</label>
+                    <input type="text" class="form-control" name="Salary" [(ngModel)]="Search.Salary">
+                  </div>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-4 col-12">
+                  <div class="form-group">
+                    <label>{{'Choose Activation'}}</label>
+                    <select class="form-control" name="IsActive" [(ngModel)]="Search.IsActive">
+                      <option [ngValue]="undefined">{{'All' }}</option>
+                      <option [ngValue]="true">{{'Active' }}</option>
+                      <option [ngValue]="false">{{'Not Active' }}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <hr>
+              <div class="actions">
+                  <button type="button" (click)="SearchEmployee()" class="primary-btn">
+                    {{'Search'  }}
+                  </button>
+                  <button (click)="ResetEmployeeSearch()" class="secondry-btn">
+                    {{'ResetSearch' }}
+                  </button>
+              </div>
+            </form>
+          </div>
+      </div>
+      <div class="table-details">
+          <div class="table-title">
+              <h3>
+
+              </h3>
+              <div class="actions">
+                <button class="primary-btn add" data-bs-toggle="modal" (click)="resetForm()" data-bs-target="#addNewModal" >
+                  {{'Add' }}
+                </button>
+              </div>
+          </div>
+          <div class="table-responsive mt-4">
+            <table  class="table">
+              <thead class="text-center">
+                <tr>
+                  <th>#</th>
+                  <th scope="col" (click)="sortColumn('Name')">{{'Employee Name' }} <i class="fas fa-sort"></i></th>
+                  <th scope="col" (click)="sortColumn('Salary')">{{'Employee Salary' }} <i class="fas fa-sort"></i></th>
+                  <th scope="col">{{'Manager Name' }}</th>
+                  <th scope="col">{{'Department Name' }}</th>
+                  <th scope="col">{{'IsActive'  }}</th>
+                  <th>{{'Actions'  }}</th>
+                </tr>
+              </thead>
+              <tbody class="text-center">
+                <tr *ngFor="let item of EmployeeList | paginate: { itemsPerPage: PageSize, currentPage: PageNumber, totalItems: TotalRows } ; let i = index" >
+                  <td>{{(i + 1) + (PageNumber - 1) * PageSize}}</td>
+                  <td>{{item.Name}}</td>
+                  <td>{{item.Salary}}</td>
+                  <td>{{item.ManagerName}}</td>
+                  <td>{{item.DepartmentName}}</td>
+                  <td>
+                    <div class="custom-control custom-checkbox mb-4">
+                      <input type="checkbox" class="custom-control-input" id="customControlInline"  [checked]="item.IsActive"  [disabled]="true" />
+                      <label class="custom-control-label" for="customControlInline"></label>
+                    </div>
+                  <td>
+                    <div class="table-action">
+                      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addNewModal"
+                      title="Edit"  (click)="bindEmployee(item)">
+                      <i class="fa-solid fa-edit"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="NotFoundData" *ngIf="EmployeeList.length == 0">{{'Not Found Data' }}</div>
+
+          <div class="mt-4">
+            <pagination-controls (pageChange)="pageChangeEvent($event)"  previousLabel="{{'previous'}}" nextLabel="{{'next'}}"></pagination-controls>
+          </div>
+      </div>
+  </article>
+  <article class="container-fluid mb-5">
+    <!-- <div class="sect-content">
+        <h3>
+          {{'SearchCriteria' }}
+        </h3>
+        <div class="details">
+          <form>
+            <div class="row">
+              <div class="col-lg-3 col-md-4 col-sm-4 col-12">
+                <div class="form-group">
+                  <label for="exampleInputEmail1">{{'Id' }}</label>
+                  <input type="text" class="form-control" name="EmployeeId" [(ngModel)]="Search.Id">
+                </div>
+              </div>
+              <div class="col-lg-3 col-md-4 col-sm-4 col-12">
+                <div class="form-group">
+                  <label for="exampleInputEmail1">{{'Employee Name' }}</label>
+                  <input type="text" class="form-control" name="Name" [(ngModel)]="Search.Name">
+                </div>
+              </div>
+              <div class="col-lg-3 col-md-4 col-sm-4 col-12">
+                <div class="form-group">
+                  <label for="exampleInputEmail1">{{'Employee Salary' }}</label>
+                  <input type="text" class="form-control" name="Salary" [(ngModel)]="Search.Salary">
+                </div>
+              </div>
+              <div class="col-lg-3 col-md-4 col-sm-4 col-12">
+                <div class="form-group">
+                  <label>{{'Choose Activation'}}</label>
+                  <select class="form-control" name="IsActive" [(ngModel)]="Search.IsActive">
+                    <option [ngValue]="undefined">{{'All' }}</option>
+                    <option [ngValue]="true">{{'Active' }}</option>
+                    <option [ngValue]="false">{{'Not Active' }}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <hr>
+            <div class="actions">
+                <button type="button" (click)="SearchEmployee()" class="primary-btn">
+                  {{'Search'  }}
+                </button>
+                <button (click)="ResetEmployeeSearch()" class="secondry-btn">
+                  {{'ResetSearch' }}
+                </button>
+            </div>
+          </form>
+        </div>
+    </div> -->
+    <div class="table-details">
+        <div class="table-title">
+            <h3>
+
+            </h3>
+            <div class="Header">
+                <h2>Managers List</h2>
+            </div>
+        </div>
+        <div class="table-responsive mt-4">
+          <table  class="table">
+            <thead class="text-center">
+              <tr>
+                <th>#</th>
+                <th scope="col" (click)="sortColumn('Name')">{{'Employee Name' }} <i class="fas fa-sort"></i></th>
+                <th scope="col" (click)="sortColumn('Salary')">{{'Employee Salary' }} <i class="fas fa-sort"></i></th>
+                <!-- <th scope="col">{{'Manager Of Manager Name' }}</th> -->
+                <th scope="col">{{'Department Name' }}</th>
+                <th scope="col">{{'IsActive'  }}</th>
+                <th>{{'Actions'  }}</th>
+              </tr>
+            </thead>
+            <tbody class="text-center">
+              <tr *ngFor="let item of ManagersList ; let i = index" >
+                <td>{{(i + 1) + (PageNumber - 1) * PageSize}}</td>
+                <td>{{item.Name}}</td>
+                <td>{{item.Salary}}</td>
+                <!-- <td>{{item.ManagerOFManagerName}}</td> -->
+                <td>{{item.MDepartmentName}}</td>
+                <td>
+                  <div class="custom-control custom-checkbox mb-4">
+                    <input type="checkbox" class="custom-control-input" id="customControlInline"  [checked]="item.IsActive"  [disabled]="true" />
+                    <label class="custom-control-label" for="customControlInline"></label>
+                  </div>
+                <td>
+                  <div class="table-action">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addNewModal"
+                    title="Edit"  (click)="bindEmployee(item)">
+                    <i class="fa-solid fa-edit"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="NotFoundData" *ngIf="EmployeeList.length == 0">{{'NotFoundData' }}</div>
+
+        <!-- <div class="mt-4">
+          <pagination-controls (pageChange)="pageChangeEvent($event)"  previousLabel="{{'previous'}}" nextLabel="{{'next'}}"></pagination-controls>
+        </div> -->
+    </div>
+</article>
+</section>
+<!-- End Attachment Page -->
+<!-- Modal -->
+<div class="modal fade" id="addNewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">{{(IsUpdate?'Edit':'Add')}}</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close" #closeModal>
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form [formGroup]="EmployeeForm" (ngSubmit)="submitForm()">
+        <div class="modal-body">
+          <div class="row px-0">
+            <div class="col-md-6 col-sm-12 col-12">
+              <div class="form-group">
+                <label for="Name">{{'Employee Name' }}
+                <span *ngIf="(submitted || EmployeeForm.controls['Name'].touched)  && EmployeeForm.controls['Name'].errors?.['required']" class="text-danger">{{'*' }}</span>
+            </label>
+                <input type="text" class="form-control" id="Name" formControlName="Name"
+                [ngClass]="{'is-invalid': (submitted || EmployeeForm.controls['Name'].touched) && EmployeeForm.controls['Name'].errors}">
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-12 col-12">
+              <div class="form-group">
+                <label for="Salary">{{'Employee Salary' }}
+                <span *ngIf="(submitted || EmployeeForm.controls['Salary'].touched)  && EmployeeForm.controls['Salary'].errors?.['required']" class="text-danger">{{'*' }}</span>
+            </label>
+                <input type="number" class="form-control" id="Salary" formControlName="Salary"
+                [ngClass]="{'is-invalid': (submitted || EmployeeForm.controls['Salary'].touched) && EmployeeForm.controls['Salary'].errors}">
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-12 col-12">
+              <div class="form-group" >
+                <label for="FkManagerId">{{'Manager' }}
+                <span *ngIf="(submitted || EmployeeForm.controls['FkManagerId'].touched)  && EmployeeForm.controls['FkManagerId'].errors?.['required']" class="text-danger">{{'*' }}</span>
+            </label>
+            <select  class="form-control" id="FkManagerId" formControlName="FkManagerId"  (change)="fillDepartmentList()">
+              <option [ngValue]="null">{{'Select Manager'}}</option>
+              <option [disabled]="IsManagerUser" *ngFor="let item of ManagersList" [ngValue]="item.Id" >{{item.Name}}</option>
+            </select>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-12 col-12">
+              <div class="form-group">
+                <label for="FkDepartmentId">{{'Department' }}
+                <span *ngIf="(submitted || EmployeeForm.controls['FkDepartmentId'].touched)  && EmployeeForm.controls['FkDepartmentId'].errors?.['required']" class="text-danger">{{'*' }}</span>
+            </label>
+            <select class="form-control" id="FkDepartmentId" formControlName="FkDepartmentId" >
+              <option [ngValue]="null">{{'Select Department' }}</option>
+              <option *ngFor="let depart of Departments" [ngValue]="depart.Id" [disabled]="IsManagerUser">{{depart.Name}}</option>
+            </select>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-12 col-12">
+              <div class="custom-control custom-checkbox mode-check">
+                <input type="checkbox" id="IsManager" class="custom-control-input" formControlName="IsManager">
+                <label class="custom-control-label" for="IsManager">{{'Is Manager?'  }}</label>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-12 col-12">
+              <div class="custom-control custom-checkbox mode-check">
+                <input type="checkbox" id="IsActive" class="custom-control-input" formControlName="IsActive">
+                <label class="custom-control-label" for="IsActive">{{'IsActive'  }}</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer justify-content-start">
+          <button type="submit" class="primary-btn">{{(IsUpdate?'Edit':'Add')  }}</button>
+          <button class="secondry-btn" (click)="resetForm()" data-bs-dismiss="modal">{{'Cancel' }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Button trigger modal -->
+
+
+
+

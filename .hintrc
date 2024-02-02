@@ -1,0 +1,29 @@
+{
+  "extends": [
+    "development"
+  ],
+  "hints": {
+    "compat-api/css": [
+      "default",
+      {
+        "ignore": [
+          "width: fit-content"
+        ]
+      }
+    ],
+    "axe/forms": [
+      "default",
+      {
+        "label": "off",
+        "select-name": "off"
+      }
+    ],
+    "button-type": "off",
+    "axe/parsing": [
+      "default",
+      {
+        "duplicate-id-aria": "off"
+      }
+    ]
+  }
+}
